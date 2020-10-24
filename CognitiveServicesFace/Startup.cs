@@ -39,6 +39,7 @@ namespace CognitiveServicesFace
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
             }
             else
             {

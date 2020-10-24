@@ -8,7 +8,7 @@ namespace CognitiveServicesFace.Models
     public class EmotionModel
     {
         public int Id { get; set; }
-        public float Score { get; set; }
+        public double Score { get; set; }
         public int FaceId { get; set; }
         public EmotionEnum Type { get; set; }
 
