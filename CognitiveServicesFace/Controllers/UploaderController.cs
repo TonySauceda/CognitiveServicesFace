@@ -26,7 +26,8 @@ namespace CognitiveServicesFace.Controllers
             _webHostEnvironment = webHostEnvironment;
 
             string key = _config.GetValue<string>("CognitiveServiceFaceKey");
-            _faceHelper = new FaceHelper(key);
+            string endPoint = _config.GetValue<string>("CognitiveServiceFaceEndPoint");
+            _faceHelper = new FaceHelper(key, endPoint);
 
             _context = context;
         }

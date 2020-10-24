@@ -17,10 +17,10 @@ namespace CognitiveServicesFace.Helpers
     {
         public FaceClient faceClient;
 
-        public FaceHelper(string subscriptionKey)
+        public FaceHelper(string subscriptionKey, string endPoint)
         {
             faceClient = new FaceClient(new ApiKeyServiceClientCredentials(subscriptionKey));
-            faceClient.Endpoint = "https://tonysauceda-cognitive-service-face.cognitiveservices.azure.com/";
+            faceClient.Endpoint = endPoint;
         }
 
         public async Task<PictureModel> DetectAndExtractFaceAsync(Stream imageStream)
