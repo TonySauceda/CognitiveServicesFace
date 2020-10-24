@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,9 +52,16 @@ namespace CognitiveServicesFace.Controllers
                 {
                     await file.CopyToAsync(stream);
                 }
+
                 using (var fs = new FileStream(route, FileMode.Open))
                 {
                     var picture = await _faceHelper.DetectAndExtractFaceAsync(fs);
+
+                    using (var image = Image.FromStream(file.OpenReadStream()))
+                    {
+                        picture.Width = image.Width;
+                        picture.Height = image.Height;
+                    }
 
                     picture.Name = file.FileName;
                     picture.Path = $"{folderPath}/{pictureName}";

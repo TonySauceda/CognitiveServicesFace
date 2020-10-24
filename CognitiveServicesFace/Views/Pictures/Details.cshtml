@@ -2,29 +2,120 @@
 
 @{
     ViewData["Title"] = "Details";
+    var settings = new Newtonsoft.Json.JsonSerializerSettings()
+    {
+        ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+    };
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>PictureModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Path)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Path)
-        </dd>
-    </dl>
+<div class="text-center h4">
+    @Html.DisplayFor(model => model.Name)
 </div>
+
+<div class="row">
+    <div class="col-auto" id="divDatos">
+
+    </div>
+    <div class="col">
+        <div class="text-center">
+            <canvas style="background-image: url('../../@Model.Path');" id="pictureCanvas" width="@Model.Width" height="@Model.Height"></canvas>
+        </div>
+    </div>
+</div>
+
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script>
+    let model = @(Json.Serialize(Model,settings));
+    let c = document.getElementById("pictureCanvas");
+    let ctx = c.getContext("2d");
+    let Colors = {};
+    let colorList = [];
+    let divDatos = document.getElementById("divDatos");
+
+
+    (function () {
+        Colors.names = {
+            aqua: "#00ffff",
+            black: "#000000",
+            blue: "#0000ff",
+            brown: "#a52a2a",
+            cyan: "#00ffff",
+            darkblue: "#00008b",
+            darkcyan: "#008b8b",
+            darkgrey: "#a9a9a9",
+            darkgreen: "#006400",
+            darkkhaki: "#bdb76b",
+            darkmagenta: "#8b008b",
+            darkolivegreen: "#556b2f",
+            darkorange: "#ff8c00",
+            darkorchid: "#9932cc",
+            darkred: "#8b0000",
+            darksalmon: "#e9967a",
+            darkviolet: "#9400d3",
+            fuchsia: "#ff00ff",
+            gold: "#ffd700",
+            green: "#008000",
+            indigo: "#4b0082",
+            khaki: "#f0e68c",
+            lime: "#00ff00",
+            magenta: "#ff00ff",
+            maroon: "#800000",
+            navy: "#000080",
+            olive: "#808000",
+            orange: "#ffa500",
+            pink: "#ffc0cb",
+            purple: "#800080",
+            violet: "#800080",
+            red: "#ff0000",
+            silver: "#c0c0c0",
+            yellow: "#ffff00"
+        };
+
+        Colors.random = function () {
+            var result;
+            var count = 0;
+            for (var prop in this.names)
+                if (Math.random() < 1 / ++count)
+                    result = prop;
+            return result;
+        };
+
+        model.Faces.forEach((item, index) => {
+
+            let randomColor = Colors.random();
+            if (colorList.includes(randomColor))
+                randomColor = Colors.random();
+
+            colorList.push(randomColor);
+
+                ctx.beginPath();
+                ctx.lineWidth = "4";
+                ctx.strokeStyle = randomColor;
+                ctx.rect(item.Left, item.Top, item.Width, item.Height);
+            ctx.stroke();
+
+            var ul = document.createElement("UL");
+            ul.style.border = "thick solid " + randomColor;
+            ul.style.padding = "0.5rem";
+            ul.style.width = "100%";
+            item.Emotions.forEach((itm, idx) => {
+                if (itm.Score > 0) {
+                    var node = document.createElement("LI");
+                    node.style.listStyleType = "none";
+                    var textnode = document.createTextNode(parseFloat(itm.Score * 100).toFixed(2) + "% " + itm.TypeText);
+                    node.appendChild(textnode);
+                    ul.appendChild(node);
+                }
+            });
+
+            divDatos.append(ul);
+
+        });
+        })();
+
+
+</script>

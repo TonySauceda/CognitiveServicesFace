@@ -35,7 +35,10 @@ namespace CognitiveServicesFace.Controllers
             }
 
             var pictureModel = await _context.Pictures
+                .Include(x => x.Faces)
+                .ThenInclude(y => y.Emotions)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (pictureModel == null)
             {
                 return NotFound();

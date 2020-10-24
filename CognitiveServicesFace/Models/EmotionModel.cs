@@ -13,5 +13,6 @@ namespace CognitiveServicesFace.Models
         public EmotionEnum Type { get; set; }
 
         public virtual FaceModel Face { get; set; }
+        public virtual string TypeText { get => Type.ToString(); }
     }
 }

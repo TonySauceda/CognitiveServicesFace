@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using CognitiveServicesFace.Data;
+using Newtonsoft.Json;
 
 namespace CognitiveServicesFace
 {
@@ -25,12 +26,16 @@ namespace CognitiveServicesFace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-
-            var test = Configuration.GetConnectionString("CognitiveServicesFaceContext");
+            services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Formatting = Formatting.Indented;
+                })
+                .AddRazorRuntimeCompilation();
 
             services.AddDbContext<CognitiveServicesFaceContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CognitiveServicesFaceContext")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

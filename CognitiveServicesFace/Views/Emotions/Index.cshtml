@@ -28,7 +28,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Score)
+                @item.Score.ToString("P2")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Type)
